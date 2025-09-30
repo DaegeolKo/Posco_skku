@@ -143,7 +143,6 @@
                 type="video/mp4">
       </video>
       <h2 class="subtitle has-text-centered">
-        Test
       </h2>
     </div>
   </div>
@@ -208,9 +207,9 @@
 </section> -->
 
 
-<section class="section">
+<!--<section class="section">
   <div class="container is-max-desktop">
-    <!-- Abstract. -->
+      Abstract.
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
@@ -245,10 +244,9 @@
         </div>
       </div>
     </div>
-    <!--/ Abstract. -->
 
-    <!-- Paper video. -->
-    <!-- <div class="columns is-centered has-text-centered">
+
+    <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3">Video</h2>
         <div class="publication-video">
@@ -257,14 +255,96 @@
         </div>
       </div>
     </div> -->
-    <!--/ Paper video. -->
+    <!--/ Paper video. 
   </div>
-</section>
+</section> -->
 
 
 <section class="section">
   <div class="container is-max-desktop">
-    <h2 class="title is-2">Control Pipeline</h2>
+    <h2 class="title is-2">State Estimation</h2>
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+          <p>
+          This module includes a <strong>SLAM system</strong> for building a <strong>3D point cloud map</strong> and a <strong>localization system for estimating the robot’s 6D pose</strong> on the pre-built map.<br>
+          <p>Our SLAM and localization framework is based on  <strong>LIO (LiDAR-Inertial Odometry) with leg odometry</strong>, utilizing <strong>two LiDAR sensors</strong> and <strong>one IMU </strong>:</p>
+          - <strong>LiDARs :</strong> Hesai XT16 and Unitree L1<br>
+          &nbsp; &nbsp; &nbsp;The L1 LiDAR is used mainly for observing the ground surface, since in the competition environment the XT16 LiDAR alone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;could not capture it reliably. <br>
+          - <strong>IMU :</strong> The onboard IMU integrated in Unitree Go2 is used.
+
+
+          </p>
+          <center>
+          <video id="teaser" autoplay muted loop playsinline width="600" >
+            <source src="./static/videos/slam_demo.mp4"
+                type="video/mp4">
+          </video>
+        </center>
+        </div>
+      </div>
+
+    </div>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-2">Planner</h2>
+
+    <div class="columns is-centered">
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">Global Path Planner</h2>
+          <p>
+          Our global path planner is built on an occupancy grid map created by projecting the SLAM-based point cloud into 2D, combined with the <strong>A* algorithm</strong>. <br><br>
+          In the competition setting, the robot only needs to navigate through designated corridors, and the safest path is always along the center of the corridor —<strong> where the robot maintains equal distance from obstacles</strong>. <br><br>
+          To find this path, we calculate a <strong>signed distance field (SDF)</strong> from the occupancy grid map and derive its gradient. By masking the pixels near the zero-level gradient, we create what we call a zero-SDF gradient map. These masked pixels represent the central lines of corridors, equidistant from obstacles. We then <strong>restrict A* search to this reduced set of valid pixels</strong>. <br><br>
+          This approach not only <strong>reduces the search space within narrow corridors</strong>, but also <strong>provides a high-quality initial guess for the local path planner</strong>, which subsequently refines the trajectory while considering detailed obstacle avoidance.<br>
+
+          </p>
+          <img src="./static/images/global_path_planner.png"
+                class="a"
+                alt="Interpolate start reference image."/>
+        </div>
+      </div>
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <div class="column">
+        <h2 class="title is-3">Local Path Planner</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <br>
+            <br>
+            <br>
+            <p>
+              The local path planner is based on <strong>Model Predictive Control (MPC)</strong>. The robot’s collision model is represented by <strong>multiple collision barriers</strong>, and constraints are imposed to ensure that the <strong>SDF (Signed Distance Field)</strong> values at the centers of these barriers remain greater than a predefined safety margin, thereby enabling obstacle avoidance. For computational efficiency, the SDF is approximated using a Taylor expansion.<br><br>
+              The planner <strong>optimizes H+1 future states and H velocity inputs to both follow the global path and smooth the control inputs</strong>. Among these, only the first velocity input is applied to the robot as the control command.
+            </p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            
+            
+            <img src="./static/images/local_path_planner.png"
+                class="a"
+                alt="Interpolate start reference image."/>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-2">Control</h2>
 
     <div class="columns is-centered">
 
@@ -301,12 +381,12 @@
     </div>
     <!--/ Matting. -->
 
-    <!-- Animation. -->
+    <!-- Animation.
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Animation</h2>
 
-        <!-- Interpolating. -->
+
         <h3 class="title is-4">Interpolating states</h3>
         <div class="content has-text-justified">
           <p>
@@ -338,10 +418,10 @@
           </div>
         </div>
         <br/>
-        <!--/ Interpolating. -->
+        / Interpolating.
 
-        <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
+        Re-rendering.
+         <h3 class="title is-4">Re-rendering the input video</h3>
         <div class="content has-text-justified">
           <p>
             Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
@@ -358,12 +438,11 @@
             <source src="./static/videos/replay.mp4"
                     type="video/mp4">
           </video>
-        </div>
-        <!--/ Re-rendering. -->
+        </div> 
+
 
       </div>
-    </div>
-    <!--/ Animation. -->
+    </div> -->
 
 
     <!-- Concurrent Work. -->
