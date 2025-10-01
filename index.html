@@ -259,6 +259,52 @@
   </div>
 </section> -->
 
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-2">System Architecture</h2>
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+          <p>
+            We've structured our <strong>system architecture</strong> using the diagram above, with each box performing an independent role.<br>
+            The <strong>optimized robot state</strong> is calculated using the robot's proprioceptive sensor information (IMU, Joint) and extereoceptive sensor information (LiDAR). <span style="color:green;">(Green box)</span><br>
+            And then, we generate an A* based <strong>global planner</strong> to the goal point with the prebuilt map, and calculate an <strong>MPC based local planner</strong> using the optimized robot state to obtain commands to be given to the robot. <span style="color:orange;">(Yellow box)</span><br>
+            <strong>Locomotion</strong> is performed by selecting various gaits such as walking, low stand walking, and jumping according to the obtained command and given situation. <span style="color:blue;">(Blue box)</span><br>
+            Additionally, we utilize key regions and robot sensor information required for mission execution to  make the robot perform <strong>various missions</strong> such as jump detection, dynamic obstacle avoidance, and traffic signal detection. <span style="color:red;">(Red box)</span>
+          </p>
+          <center>
+          <img src="./static/images/system_architecture.png"
+                class="a"
+                alt="Interpolate start reference image."/>
+        </center>
+        </div>
+      </div>
+
+    </div>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-2">Control</h2>
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+          <p>
+            The <strong>locomotion controller</strong> can operate fully autonomously based on <strong>commands</strong> from the path planner. However, a separated control mode is provided for joystick control in situations requiring user intervention, such as mission failures or robot falls. 
+            When receiving a target gait command, it selects various <strong>RL policies</strong> being computed in the background or <strong>SDK controller</strong> functions based on that value to perform the robot's locomotion.
+          </p>
+          <center>
+          <img src="./static/images/control.png"
+                class="a"
+                alt="Interpolate start reference image."/>
+        </center>
+        </div>
+      </div>
+
+    </div>
+
+
 
 <section class="section">
   <div class="container is-max-desktop">
@@ -272,12 +318,14 @@
           <p>Our SLAM and localization framework is based on  <strong>LIO (LiDAR-Inertial Odometry) with leg odometry</strong>, utilizing <strong>two LiDAR sensors</strong> and <strong>one IMU </strong>:</p>
           - <strong>LiDARs :</strong> Hesai XT16 and Unitree L1<br>
           &nbsp; &nbsp; &nbsp;The L1 LiDAR is used mainly for observing the ground surface, since in the competition environment the XT16 LiDAR alone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;could not capture it reliably. <br>
-          - <strong>IMU :</strong> The onboard IMU integrated in Unitree Go2 is used.
+          - <strong>IMU :</strong> The onboard IMU integrated in Unitree Go2 is used.<br>
+          - <strong>Leg odometry :</strong> The joint measurements, contact information, and angular velocity of the Unitree Go2 are utilized. <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Their subsequent preintegration is applied within the SLAM framework. 
 
 
           </p>
           <center>
-          <video id="teaser" autoplay muted loop playsinline width="600" >
+          <video id="teaser" autoplay muted loop playsinline width="1000" >
             <source src="./static/videos/slam_demo.mp4"
                 type="video/mp4">
           </video>
@@ -330,8 +378,6 @@
             <br>
             <br>
             <br>
-            <br>
-            <br>
             
             
             <img src="./static/images/local_path_planner.png"
@@ -343,44 +389,79 @@
       </div>
     </div>
 
+</section>
+
 
 <section class="section">
   <div class="container is-max-desktop">
-    <h2 class="title is-2">Control</h2>
-
     <div class="columns is-centered">
-
-      <!-- Visual Effects. -->
       <div class="column">
         <div class="content">
-          <h2 class="title is-3">System Architecture</h2>
-          <p>
-          To enable interaction with the low-level system using the policies and velocity commands that are generated from the Perception (SLAM, Path planning) stage to accomplish the required tasks.
-          </p>
-          <img src="./static/images/control_system_architecture.png"
-                class="a"
-                alt="Interpolate start reference image."/>
-        </div>
-      </div>
-      <!--/ Visual Effects. -->
+          <h2 class="title is-3">Video</h2>
 
-      <!-- Matting. -->
-      <div class="column">
-        <h2 class="title is-3">Control scheme</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <img src="./static/images/control_scheme.png"
-                class="a"
-                alt="Interpolate start reference image."/>
+          <!-- 1st row (4 videos) -->
+          <div class="columns is-vcentered">
+            <div class="column has-text-centered">
+              <div style="text-align:left;">jump</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/jump.mov" type="video/mp4">
+              </video>
+            </div>
+            <div class="column has-text-centered">
+              <div style="text-align:left;">dynamic obstacle</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/dynamic_obstacle.mov" type="video/mp4">
+              </video>
+            </div>
+            <div class="column has-text-centered">
+              <div style="text-align:left;">overhanging obstacle</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/low_posture.mov" type="video/mp4">
+              </video>
+            </div>
+            <div class="column has-text-centered">
+              <div style="text-align:left;">narrow space</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/narrow_space.mov" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+          <!-- 2nd row (4 videos) -->
+          <div class="columns is-vcentered">
+            <div class="column has-text-centered">
+              <div style="text-align:left;">stair</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/stair.mov" type="video/mp4">
+              </video>
+            </div>
+            <div class="column has-text-centered">
+              <div style="text-align:left;">uneven terrain</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/uneven_terrain.mov" type="video/mp4">
+              </video>
+            </div>
+            <div class="column has-text-centered">
+              <div style="text-align:left;">traffic signal</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/traffic_signal.mov" type="video/mp4">
+              </video>
+            </div>
+            <div class="column has-text-centered">
+              <div style="text-align:left;">sprint</div>
+              <video autoplay controls muted loop playsinline width="100%">
+                <source src="./static/videos/sprint.mov" type="video/mp4">
+              </video>
+            </div>
           </div>
 
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+
     <!--/ Matting. -->
 
     <!-- Animation.
@@ -446,6 +527,9 @@
       </div>
     </div> -->
 
+<section>
+
+  <div class="container is-max-desktop">
 
     <!-- Concurrent Work. -->
     <div class="columns is-centered">
@@ -465,6 +549,7 @@
           <p>
             <a href="https://www.ytn.co.kr/_ln/0102_202509101626206108">YTN, "포스코홀딩스 '산업용 AI-로봇 경진대회' 개최", 2025.09.10</a>
           </p>
+          <br>
         </div>
       </div>
     </div>
